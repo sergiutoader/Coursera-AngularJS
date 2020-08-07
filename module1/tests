@@ -1,0 +1,62 @@
+Quiz 3
+Question 1
+Choose all the options that describe good code characteristics (ones that make
+the code less complex)
+
+Ability to find code quickly
+Ability to update functionality without a re-write of large portions of the code
+The same code is not written in multiple places in your code
+
+================================================================================
+
+Quiz 4
+
+Question 1
+Match the following description to the correct term:
+"If you change how Component A is implementing a certain API, you will have to
+change how Component B uses that API."
+
+Example of tight coupling (lack of loose coupling)
+
+
+Question 2
+Match the following description to the correct term:
+"Component A has 10 methods."
+
+Need more information
+
+================================================================================
+
+Quiz 5
+
+Question 1
+MVVM Design Pattern has a Model, View, ViewModel and what other component?
+Declarative Binder
+
+Question 2
+ViewModel does not hold data, only the Model does.
+False
+
+Question 3
+Question 3
+The View never directly changes any data
+True
+
+================================================================================
+
+Quiz 6
+
+Question 1
+In AngularJs, Controller serves the function of ViewModel - True
+
+================================================================================
+
+Quiz 7
+
+Question 1
+In the following code snippet, (assuming MyController is bound to some HTML
+element in our template), 'x' can now be referenced in our HTML template.
+
+No...
+
+================================================================================

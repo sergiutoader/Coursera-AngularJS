@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app='MsgApp'>
+  <head>
+    <meta charset="utf-8">
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+    <style> body { font-size: 1.2em; }</style>
+    <title>Expressions and Interpolation</title>
+  </head>
+  <body>
+    <h1>Expressions and Interpolation</h1>
+    <div ng-controller='MsgController'>
+      {{name}} has a message for you: <br>
+      {{sayMessage()}}
+      <br>
+      <!-- use ng-src instead of src to solve the GET 404 Error which occurs because
+      the page tries to fetch the image with unprocessed source-->
+      <img ng-src="images/yaakov_{{hungerState}}.png">
+      <br>
+      <button type="button" name="button" ng-click="feedMe();">Feed Yaakov</button>
+
+    </div>
+
+  </body>
+</html>

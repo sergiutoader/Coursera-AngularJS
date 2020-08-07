@@ -1,0 +1,81 @@
+(1) - Why NOT Keep Things Simple?
+
+Purpose of additional technologies and approaches is to deal with complexity
+Easier to deal with code:
+  - Good code organisation
+  - Updating part of it shouldn't affect other parts
+  - Reusable code
+  - Testable code
+
+(2) - Why does code get complex?
+
+High Cohesion - when smaller pieces of functionality are strongly
+related to each other within some code boundary
+(How well does that one thing stick to doing just one thing)
+
+Loose Coupling - least possible dependency of one component on
+another component
+(If you change one, you do not have to change the other)
+
+
+(3) Model-View-ViewModel - Design Pattern
+
+Model - represents and holds raw data
+      - some of this data, in some form, may be displayed in the View
+      - can also contain logic to retrieve the data from some source
+      - contains no logic associated with displaying the model
+
+View  - User Interface
+      - In a web app, it's the HTML and CSS
+      - Only displays the data that it is given
+      - Never changes the data
+      - Declaratively broadcasts events, but never handles them
+
+ViewModel - representation of the state of the view
+          - holds the data that is displayed in the view
+          - responds to view events, aka presentation logic
+          - calls other functionality for business logic processing
+          - never asks the view to display anything
+
+Declarative Binder - declaratively binds the model of the ViewModel to the View
+                   - declaratively means you don't have to write any code (the
+                   framework does the "magic")
+                   - key enabler of the whole MVVM pattern
+
+Angular is not restricted to MVVM
+
+
+(8) Dependency injection
+
+- design pattern that implements inversion of control for resolving dependencies
+- client gets called with the dependency by some system
+  - in our case, the "system" is AngularJS
+- Client is not responsible for instantiating the dependency
+
+
+(10) Protecting Dependency Injection from Minification
+
+Minification = process of removing all unnecessary characters from source code
+without changing its functionality
+  - purpose: reduces the amount of data transferred from the server
+
+
+(11) - Expressions and Interpolation
+
+Expression: {{ exp }}
+Something that evaluates to some value
+- Processed by Angular & roughly similar to result of eval(some_js)
+- Executed in the context of the scope & has access to properties on $scope
+- Doesn't throw errors if it results in a TypeError or ReferenceError (instead,
+it displays an empty string)
+- Control flow functions (e.g, 'if' statements, etc.) are not allowed
+- Accept a filter or a filter chain to format the output
+
+Interpolation:
+- Process of evaluating a string literal containing one or more placeholders,
+which are replaced by values
+
+Message is {{message}} -> Message is hello
+(provided that message = "hello")
+- Still connected to the original message property
+  (if $scope.message changes, so will the interpolation result)
