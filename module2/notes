@@ -1,0 +1,159 @@
+(13) Creating custom filters
+
+STEP 1: Define filter factory function
+STEP 2: Register filter output with module
+STEP 3: Inject it with nameFilter
+
+Creating custom filters that accept additional arguments
+STEP 1: Define filter (factory) function with custom arguments
+STEP 2: Register filter factory with additional arguments
+STEP 3: (Javascript) Inject it with nameFilter
+STEP 3: (HTML) use it as registered name
+
+Filters in HTML : Pass extra arguments with :arg
+Chaining filters in HTML using |
+
+(14) Digest Cycle
+
+Digest-Cycle: running digest loops until all watchers report that nothing has
+changed (Dirty checking)
+Several ways to set up watchers:
+  - $scope.$watch - don't do this in a controller
+  - interpolating some property {{someProp}}
+  - <input ... ng-model="someProp">
+Only applies to things done inside of the Angular context
+
+
+Quiz - 13
+How many watchers does Angular setup for the following snippet of code?
+
+<input type="text" ng-model="value">
+<div>{{ value + '!' }}</div>
+<button ng-click="getValue()">Get Value</button>
+
+ng-model causes 1. Interpolation of {{ value + '!' }} causes another. You would
+think that since it's the same property, Angular wouldn't create another
+watcher. However, interpolations *always* create another watch. The prime
+example of why is the + "!" part. It needs a separate watcher because it's not
+simply a matter of that property. Inside of a interpolation, you can have
+operations performed, so another watcher that handles those operations and
+redisplays the newly created results is needed. The button's ng-click doesn't
+cause any. So, final answer is 2.
+
+(15) $digest and $apply
+
+Digest Cycle does not get triggered automatically if events are unaware of
+Angular
+Solution:
+  - Call $digest after your custom code
+  - Wrap your custom code inside of $apply
+  - Find Angular specific service that handles the same functionality, e.g.
+  $timeout
+
+(16) - 2-way, 1-way and 1-time Binding
+
+2-way binding (ng-model) means:
+  - Listener for change on input automatically set up by Angular updates prop
+value on $scope
+  - Direct update to prop value is automatically updated in UI
+1-way binding ({{ prop }}) means:
+  - Direct update to prop value is automatically updated in UI
+1-time binding ( {{ ::prop }}) means:
+  - Initialized value of prop is automatically updated in UI
+  - Watcher for prop is removed, so UI never again gets updated
+
+
+(17) ng-repeat
+- is a directive that extends the functionality of HTML elements
+it's applied to
+- Behaves very similarly to for-each construct
+- ng-repeat="item in collection", where item can now be used in interpolation
+as an item in the collection at particular index of iteration
+- ng-repeat exposes a special $index property to the body of its host tag
+  -Holds the numeric index of the current item in the loop
+
+(18) filtered ng-repeat
+
+Angular has a special filter called 'filter'
+  - Provided a string as first argument, it will filter the array it's applied to,
+matching all string items against provided one
+
+ng-repeat="item in collection | filter : searchString"
+
+
+================================================================================
+
+(19) Prototypal Inheritance
+
+var child = Object.create(parent);
+
+What we learned as part of this lecture applies to much more than just the
+Controller As syntax
+Inheritance in general is used for code re-use (and sometimes to express a
+relationship between entities)
+Prototypal inheritance in JS is based on object instances rather than classes
+  - Property is inherited from parent, looked up through Prototype Chain
+  - Property is local if it's declared on the child with the same name as the
+parent and therefore masking the parent's property
+
+$scope is based on prototypal inheritance
+  - Child controller's $scope inherits from parent controller's $scope
+Controller As syntax is ControllerName as label
+Angular creates property 'label' on the $scope
+  - The label is as reference to 'this', i.e., instance of Controller
+  - Works because .controller treats it as a function constructor
+Attach properties to 'this' inside of Controller, not $scope
+  Easier syntax in HTML and JS - no masking errors
+
+Question 1
+True or false: given the following code snippet, the code on line 3 causes the
+Javascript engine to go up the prototype chain.
+
+<div ng-controller="Controller1 as ctrl1">
+  <div ng-controller="Controller2 as ctrl2">
+    {{ ctrl1.name }}
+  </div>
+</div>
+
+True - 'ctrl1' is a property on the parent scope, so it does not directly show
+up in the child scope of the inner controller.
+
+
+================================================================================
+
+(20) - Custom Services
+
+Controller's responsibilities:
+  - set up initial state of $scope
+  - add behaviour to $scope
+Do NOT use controllers to:
+  - Handle business logic directly
+  - Share code/state to other controllers
+Custom services instantiated with .service method
+  - Singletons (only 1 instance of object exists)
+  - Lazily instantiated (only created if something depends on them)
+.service('name', function), treats function as a function constructor
+
+
+(21) - Custom Services with .factory()
+
+.factory() allows us to produce any type of object or function
+  - that includes a service (even a singleton), but is NOT limited to
+  - .service() is just a more limited factory
+.factory('name', FactoryFunction) - name is what's injected
+Injected factory function refers to whatever is returned in the factory function
+  - Can be object literal with a prop that's a function that creates something
+  - Can be a function that creates something
+
+(22) Custom Services with .provider()
+
+.provider() - most verbose, but most flexible
+  - Configure factory not just at time of use, but at app bootstrapping
+.provider('name', function)
+  - Whatever the 'name' is - that's what gets injected into other components
+.config() function gets called before any service, factory or controller is
+instantiated
+  - Therefore, we can't inject any regular components into .config
+  - We CAN inject the provider of service with nameProvider
+
+(23) ng-if, ng-show, ng-hide
