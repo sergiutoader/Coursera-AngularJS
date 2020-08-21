@@ -1,0 +1,126 @@
+(24) Asynchronous behaviour with promises and $q
+
+Promises give as a lot of flexibility when dealing with asynchronous behaviour
+The $q service is the Angular implementation of Promise API
+Promises either get resolved or rejected
+The 'then' method takes 2 arguments (both function values)
+  - 1st - function to handle success or 'resolve' outcome
+  - 2nd - function to handle error or 'reject' outcome
+  - 'then' itself returns a promise so it is chainable
+$q.all method allows us to execute multiple promises in parallel, handling
+success / failure in one central place
+
+(25) Ajax with $http Service
+
+$http service is based on the promise api exposed to by $q
+$http is itself a function:
+  - Takes a single config object parameter (url only required property)
+  - Returns a promise to be resolved with .then function
+response.data property holds the server data response
+  - If JSON, automatically gets transformed into a JS object
+module.constant can be used as an injectable constant
+
+(26) Directives: Dynamic HTML
+
+Directive = Marker on DOM element that tells Angular's HTML compiler to attach
+a specified behaviour to that DOM element
+
+  - the compiler can even transform/change the DOM elements and its children
+  - A marker can be attribute, element name, (comment or CSS class)
+
+1. Register directive
+2. Define Factory Function
+3. Use in HTML
+
+A directive can also change HTML elements themselves
+Register name of the directive using (normalised) camel case
+Registered factory function must return a DDO (directive definition object)
+  - the factory function gets executed only once
+
+With custom directives, our HTML coding becomes:
+ - reusable
+ - Semantically relevant to the actual web app we're building
+
+
+(27) restrict property
+
+The DDO's restrict property determines what the AngularJS compiler should look
+for to detect your custom directive
+Using directive as a different restrict type than defined will cause the compiler
+to simply ignore it
+Best Practice: Use 'E' for element when directive has content along with possible
+behaviour
+Best Practice: Use 'A' for attribute when directive has no content and only
+extends the behaviour of host element
+Class and content behaviour are possible but not used
+
+
+(28) Directive's Isolate Scope: '=' and '@'
+
+Having isolate scope on the directive:
+  - Breaks the prototypal inheritance of the scope from the parent
+  - Makes the directive more independent, less coupled with the controller
+We pass values into the directive using scope bindings
+Bidirectional binding ('=') is such that directive scope property change affects
+the bound property and vice versa
+DOM attribute value binding ('@') always results in directive property being a
+string
+  - Changes to DOM attribute value are propagated to the directive property, but
+  not the other way around
+
+
+(29) Using controllers inside directives
+
+Step 1: Declare Controller in directive
+Step 2: Define Controller
+Step 3: Use in Directive's Template
+
+To add functionality to a directive, one choice is to use a controller that's
+declared directly on the DDO
+Use controller property to declare controller in DDO
+Use bindToController and controllerAs props to bind declared properties in the
+isolate scope directly to controller instance
+Define the controller function as usual
+Whenever possible, use '<' for one-way binding to save resources instead of
+bidirectional binding with '='
+
+Using the one-way binding with '<' guarantees that if the directive changes the
+passed in data, nothing outside of the directive will be affected.
+
+Not true. If we change the value of a passed in object's property, that property
+change will be visible outside of the directive.
+
+
+(30) Directive APIs and '&'
+
+'&' binding allows us to execute an expression (such as a function value) in the
+context of the parent scope
+Parent template must declare an attribute providing:
+  - Method reference to call on the parent
+  - Argument keys for directive to bind values to
+Directive:
+  - Calls the referenced method
+  - Provides a map of argument key to value pairs
+  - Allows directive to pass data back to parent from isolate scope
+
+
+(31) Manipulating the DOM with link
+
+DOM manipulation is usually done inside of the link function
+  - Declared on the DDO
+Link function does not support injection
+  - to use injected components, services, inject them into the directive declaration
+'scope' parameter is the exact $scope in directive's controller
+'element' object represents the element of the directive
+  - Top level element
+  - It's the jqLite object or jQuery object (if jQuery is included)
+
+
+(32) Using Directive's transclude to Wrap Other Elements
+
+transclude allows whole templates to be passed into a directive
+The wrapped content is evaluated in the parent's context, NOT in the directive's
+context
+In the DDO:
+  - transclude: true
+  - ng-transclude attribute designates place for evaluated wrapped content
