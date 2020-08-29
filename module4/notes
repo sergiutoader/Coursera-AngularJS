@@ -1,0 +1,150 @@
+(33) - Components & Component Based Architecture
+
+Components only control their own View and Data:
+  - Never modify data or DOM outside of their own scope
+  - Modifying creates side-effects that lead to chaos
+  - Therefore, Angular components always use isolate scope
+
+  Components have well-defined public API - Inputs and Outputs:
+    - Inputs: use '<' and '@' bindings only
+    - Never change property of passed in object or array
+    - Outputs: use '&' for component event callbacks
+    - Pass data to callback through parameter map {key: val}
+
+  Components have a well defined lifecycle:
+    - $onInit - controller initialization code
+    - $onChanges(changeObj) - called whenever one-way bindings are updated
+      - changeObj.currentValue, changeObj.previousValue
+    - $postLink - similar to 'link' in directive
+    - $onDestroy - when scope is about to be destroyed
+
+  Application is a tree of components
+    - Entire application should be comprised of components
+    - Each one would have a well defined input and output
+    - 2 way data binding is minimised as much as possible
+
+  How to create a component:
+  1) Register component with the module
+  2) Configure component
+  3) Reference props in Template
+
+Components encourage Component-based Architecture (but they don't enforce it
+100%, so they must follow conventions)
+Components should never modify data or DOM that doesn't belong to them (that is
+why it has isolate scope and well defined API)
+Register component with .component('name', configObj)
+Provide controller only if you are adding extra functionality (Otherwise,
+Angular already provides an empty function for us)
+
+
+(34) AngularJS Event System
+
+publish-subscribe design pattern
+
+Publishers send messages to subscribers on a common channel
+Publishers:
+  - Mark messages with a classification
+  - Don't know subscribers or if there are any
+Subscribers:
+  - Sign up to listen to messages with a particular classification
+  - Don't know publishers or if there are any
+In Angular, the common channel is scope
+Messages are events that can hold data
+
+Publish-Subscribe design pattern is implemented using the Angular Events system
+You can publish events from anywhere in the system and listen for those events
+anywhere in the system
+
+$scope.$emit sends the event up the scope chain
+$scope.$broadcast sends the event down the scope chain
+To broadcast to all nodes, we use $rootScope.$broadcast
+To listen to an event, use either $scope.$on or $rootScope.$on
+Deregister listener when using $rootScope.$on (to avoid memory leaks)
+
+
+(35) Modules
+
+angular.module method takes 2 arguments to declare a method:
+  - name of the module
+  - array of string module name dependencies
+
+angular.module method with just the name of the module retrieves the previously
+created module (then you declare components, controllers, etc. on it)
+
+module.config method fires before module.run method
+
+All dependency modules get configured first
+It does not matter which modules are listed first as long as module declarations
+are listed before artifact declarations on that module
+
+(36) Routing
+
+ui-router uses independent concepts for URL mapping and UI state representation
+Configure ui-router in angular.config:
+  - Provide alternate URL mapping with $urlRouterProvider.otherwise('alternatURL')
+  - Configure states with optional URLs using:
+  $stateProvider.state('name', {url: '...', templateUrl: '...'})
+Use <ui-view> tag as placeholder for state-based UI
+Use ui-sref attribute for constructing links and actions to configured states
+
+
+(37) Routing State with Controller
+
+We can declare a controller that is responsible for the state's template right
+in the state's declaration
+Use:
+  - controller: 'Ctrl as label'
+
+  - controller: Ctrl,     <- function value
+    controllerAs: 'label'
+In the template, use label.data as usual with controllerAs syntax
+
+
+(38) Routing State with resolve
+
+resolve property can be used to inject values directly into the controller
+responsible for the state
+
+If resolve property is a promise, router will wait for it to resolve, before
+transitioning to the state. If rejected, router will not transition to the new
+state at all
+
+The name of the key in the resolve's property object is what is to be injected
+into the corresponding controller's function
+Resolve can have properties that contain anything: objects, strings, etc.
+
+
+(39) Routing State with URL parameters
+
+State's URL property can be declared with parameters
+Parameters:
+  - Wrapped in curly braces /{paramName}
+  - Can have more complex matching rules other than just a string
+  - Support regular expression matching
+Use $stateParams service to retrieve parameters
+  - $stateParams.paramName
+Construct a URL with ui-sref directive:
+  - ui-sref ="stateName({paramName:value})"
+
+(40) Routing State with Nested Views
+
+Nested states allow us to logically represent nested views
+Parent state template has a ui-view in its template for the child state's
+template to insert its HTML
+Child state's name is usually declared with syntax 'parent.child'
+The optionally declared URL of the child gets concatenated to the declared URL
+of the parent
+The parent's resolve property is inherited by the child and is injectable
+directly into the child's controller
+
+
+(41) Router State Transition Events
+
+ui-router exposes numerous state change events that our code is able to listen for
+All ui-router events are fired on the $rootScope:
+  - $stateChangeStart - starts the state transition
+    - here, we can call event.preventDefault() to prevent the transition
+  - $stateChangeSuccess indicates a successful transition end
+  - $stateChangeError indicates that the transition failed, including having
+  errors in the resolve
+      - listen for this event to catch ALL errors during state changes
