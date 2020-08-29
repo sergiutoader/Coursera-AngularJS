@@ -1,0 +1,11 @@
+<a ui-sref="home">Home</a> &lt; <span>Categories</span>
+
+<h3>The food categories are:</h3>
+<ul>
+  <li class="category"
+      ng-repeat="item in list.items">
+    <a href="" ui-sref="items({itemId: item.short_name})">
+      ({{item.short_name}}) {{item.name}}
+    </a>
+  </li>
+</ul>
