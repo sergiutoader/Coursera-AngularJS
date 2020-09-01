@@ -1,0 +1,66 @@
+<div class="container">
+  <h3>Sign up to our newsletter</h3>
+  <form name="form" novalidate ng-if="!(signUpCtrl.submitted)">
+    <input  type="text"
+            name="firstName"
+            ng-model=signUpCtrl.user.firstName
+            required
+            placeholder="First Name">
+    <span ng-if="form.firstName.$error.required && form.firstName.$touched">
+      ** First name is required
+    </span>
+    <br>
+
+    <input  type="text"
+            name="lastName"
+            ng-model=signUpCtrl.user.lastName
+            required
+            placeholder="Last Name">
+    <span ng-if="form.lastName.$error.required && form.lastName.$touched">
+      ** Last name is required
+    </span>
+    <br>
+
+    <input  type="email"
+            name="email"
+            ng-model=signUpCtrl.user.email
+            required
+            placeholder="Email">
+    <span ng-if="form.email.$error.required && form.email.$touched">
+      ** Email is required
+    </span>
+    <span ng-if="form.email.$invalid && form.email.$touched">
+      ** Must be a valid email address (handle@domain format)
+    </span>
+    <br>
+
+    <input  type="text"
+            name="phone"
+            ng-model=signUpCtrl.user.phone
+            required
+            placeholder="Phone ###-###-####"
+            pattern="(\d{3})-(\d{3})-(\d{4})">
+    <span ng-if="form.phone.$error.required && form.phone.$touched">
+      ** Phone Number is required
+    </span>
+    <span ng-if="form.phone.$invalid && form.phone.$touched">
+      ** Phone Number must be in format ###-###-####
+    </span>
+    <br>
+
+    <input  type="text"
+            name="Menu Number"
+            ng-model=signUpCtrl.user.menuNumber
+            placeholder="Menu Number">
+    <span>{{signUpCtrl.errorMessage}}</span>
+    <br>
+
+
+    <button class="submit_button"
+            ng-disabled="form.$invalid"
+            ng-click="signUpCtrl.submit()">
+            Submit
+    </button>
+  </form>
+  <div ng-if="signUpCtrl.submitted"> Your information has been saved! </div>
+</div>
